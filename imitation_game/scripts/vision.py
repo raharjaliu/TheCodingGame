@@ -38,19 +38,12 @@ class image_converter:
     cv2.imshow("Image window", cv_image)
     cv2.waitKey(1)
 
-## @brief Initialization function of the node.
-#
-# Runs all servers:
-# - say aloud
-#
-def main():
-  ic = image_converter()
-  rospy.init_node('image_converter', anonymous=True)
-  try:
-    rospy.spin()
-  except KeyboardInterrupt:
-    print("Shutting down")
-  cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    main()
+    ic = image_converter()
+    rospy.init_node('image_converter', anonymous=True)
+    try:
+      rospy.spin()
+    except KeyboardInterrupt:
+      print("Shutting down")
+    cv2.destroyAllWindows()
