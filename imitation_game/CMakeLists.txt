@@ -21,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 # find_package(aruco REQUIRED )
 find_package(OpenCV REQUIRED)
-find_package(PCL REQUIRED)
+# find_package(PCL REQUIRED)
 
 ##############################################################################
 # Messages, Services and Actions
@@ -68,3 +68,4 @@ include_directories(
 #target_link_libraries(vision_node ${catkin_LIBRARIES} ${PCL_LIBS} ${OpenCV_LIBS} ${aruco_LIBS})
 
 catkin_install_python(PROGRAMS scripts/speech.py  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS scripts/vision.py  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
