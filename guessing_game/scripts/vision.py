@@ -25,8 +25,6 @@ from cv_bridge import CvBridge, CvBridgeError
 
 # path_to_darknet = '/Users/rootmac/Documents/workspace/darknet/'
 
-fgbg = cv2.createBackgroundSubtractorMOG2()
-
 class image_converter:
 
   def __init__(self):
