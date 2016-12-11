@@ -1,8 +1,0 @@
-<!-- launch file created by Emilia Lozinska -->
-<launch>
-  <!-- logic_node -->
-  <node name="vision_node" pkg="imitation_game" type="vision_node" output="screen"/>
-
-  <!-- central_node -->
-  <node name="central_node" pkg="imitation_game" type="central_node" output="screen"/>
-</launch>
