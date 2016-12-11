@@ -6,6 +6,7 @@ from sys import stdin
 from std_msgs.msg import String
 
 import ast
+import rospy
 
 class GuessingGame:
     def __init__(self):
