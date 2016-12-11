@@ -31,36 +31,14 @@ class main_node:
   def __init__(self):
 
     self.bridge = CvBridge()
-    self.vision_sub = rospy.Subscriber("image_converter", Image, self.image_cb)
-    self.speech_sub = rospy.Subscriber("gg_speech", Image, self.image_cb)
+    self.vision_sub = rospy.Subscriber("image_classification", String, self.classification_cb)
+    self.speech_sub = rospy.Subscriber("gg_speech", Image, self.speech_cb)
 
-  def predict_label(self,path):
+  def classification_cb(self,data):
+    # do something
 
-    # change working dir and run darknet
-    # in current version, darknet has to be installed in home directory (~/darknet/)
-    # call the bash script install_darknet.sh to install darknet
-    os.chdir(os.path.join(os.path.expanduser("~"), "darknet/"))
-    command = './darknet classifier predict cfg/imagenet22k.dataset cfg/extraction.cfg extraction.weights ' + path
-    val = subprocess.check_output(command.split(' '))
-
-    # postprocess the results and return
-    val = val.split('\n')
-    ret = [d for d in val if re.search('[a-z]+: [\d.]+', d)]
-
-    return {d.split(': ')[0] : float(d.split(': ')[1]) for d in ret}
-
-  def image_cb(self,data):
-    try:
-      cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-    except CvBridgeError as e:
-      print(e)
-
-    cv2.imwrite("in.png", cv_image)
-    cv2.imshow("Image window", cv_image)
-    rospy.loginfo(self.predict_label("in.png"))
-
-    cv2.waitKey(1)
-
+  def speech_cb(self,data):
+    # do something    
 
 if __name__ == "__main__":
     ic = image_converter()
