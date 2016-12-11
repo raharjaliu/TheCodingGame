@@ -20,6 +20,7 @@ import numpy
 # OpenCV stuff
 import cv2
 from sensor_msgs.msg import Image
+from std_msgs.msg import String
 from cv_bridge import CvBridge, CvBridgeError
 
 # path_to_darknet = '/Users/rootmac/Documents/workspace/darknet/'
@@ -54,9 +55,11 @@ class image_converter:
       print(e)
     cv2.imwrite("in.png", cv_image)
     cv2.imshow("Image window", cv_image)
-    # rospy.loginfo(self.predict_label("in.png"))
+    ret = rospy.loginfo(self.predict_label("in.png"))
 
     cv2.waitKey(1)
+    pub = rospy.Publisher('image_classification', String, queue_size=20)
+    pub.publish(String(str))
 
   def substract_background(self,frame):
     fgmask = fgbg.apply(frame)
