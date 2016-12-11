@@ -32,6 +32,28 @@ class image_converter:
   def __init__(self):
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("kinect2/qhd/image_color", Image, self.image_cb)
+    self.image_service = rospy.Service("image_request", image_request, fetch_image)
+    self.image = None
+
+  def fetch_image(self):
+
+    try:
+      cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+    except CvBridgeError as e:
+      print(e)
+
+    while self.image is None:
+      rospy.loginfo("Self.image does not exist yet. Waiting for 5 secs")
+      rospy.sleep(5)
+
+    cv2.imwrite("in.png", cv_image)
+    cv2.imshow("Image window", cv_image)
+    ret = rospy.loginfo(self.predict_label("in.png"))
+
+    cv2.waitKey(1)
+    pub = rospy.Publisher("image_classification", String, queue_size=20)
+    pub.publish(String(str))
+
 
   def predict_label(self,path):
 
@@ -53,13 +75,14 @@ class image_converter:
       cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
     except CvBridgeError as e:
       print(e)
-    cv2.imwrite("in.png", cv_image)
-    cv2.imshow("Image window", cv_image)
-    ret = rospy.loginfo(self.predict_label("in.png"))
+    self.image = cv_image
+    # cv2.imwrite("in.png", cv_image)
+    # cv2.imshow("Image window", cv_image)
+    # ret = rospy.loginfo(self.predict_label("in.png"))
 
-    cv2.waitKey(1)
-    pub = rospy.Publisher('image_classification', String, queue_size=20)
-    pub.publish(String(str))
+    # cv2.waitKey(1)
+    # pub = rospy.Publisher("image_classification", String, queue_size=20)
+    # pub.publish(String(str))
 
   def substract_background(self,frame):
     fgmask = fgbg.apply(frame)
