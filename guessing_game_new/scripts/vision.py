@@ -25,6 +25,7 @@ from guessing_game_new.srv import *
 
 
 import rospy
+from threading import Lock
 
 # path_to_darknet = '/Users/rootmac/Documents/workspace/darknet/'
 
@@ -35,6 +36,7 @@ class image_converter:
     self.image_sub = rospy.Subscriber("kinect2/qhd/image_color", Image, self.image_cb)
     self.image_service = rospy.Service("image_request", image_request, self.fetch_image)
     self.image = None
+    self.lock = Lock()
 
   def predict_label(self,path):
     # change working dir and run darknet
@@ -54,18 +56,23 @@ class image_converter:
     while self.image is None:
       rospy.loginfo("Self.image does not exist yet. Waiting for 5 secs")
       rospy.sleep(5)
-    cv2.imwrite("in.png", self.image)
-    cv2.imshow("Image window", self.image)
-    ret = rospy.loginfo(self.predict_label("in.png"))
-    
-    return image_requestResponse(self.bridge.cv2_to_imgmsg(self.image, encoding="passthrough"))
+
+    self.lock.acquire()
+    cv2.imwrite("in.png",self.image)
+    ret = str(self.predict_label("in.png"))
+    rospy.loginfo(ret)
+    self.lock.release()
+    return image_requestResponse(ret)
 
   def image_cb(self,data):
     try:
       cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
     except CvBridgeError as e:
       print(e)
-    self.image = cv_image
+    if not self.lock.locked():
+      self.image = cv_image
+      cv2.imshow("Image window", self.image)
+      cv2.waitKey(1)
 
 
 if __name__ == "__main__":
@@ -76,5 +83,4 @@ if __name__ == "__main__":
       rospy.spin()
     except KeyboardInterrupt:
       print("Shutting down")
-    cv2.waitKey(1)
     cv2.destroyAllWindows()
