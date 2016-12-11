@@ -14,7 +14,6 @@ import re
 import subprocess
 import time
 import math
-import rospy
 import numpy
 
 # OpenCV stuff
@@ -22,6 +21,10 @@ import cv2
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 from cv_bridge import CvBridge, CvBridgeError
+from guessing_game.srv import *
+
+
+import rospy
 
 # path_to_darknet = '/Users/rootmac/Documents/workspace/darknet/'
 
